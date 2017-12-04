@@ -1,6 +1,6 @@
 # adventofcode
 
-My attept at some of the advent of code puzzles.
+My solutions at some of the advent of code puzzles.
 
 Written in Dart.
 
