@@ -1,6 +1,5 @@
 # adventofcode
 
-A sample command-line application.
+My attept at some of the advent of code puzzles.
 
-Created from templates made available by Stagehand under a BSD-style
 [license](https://github.com/dart-lang/stagehand/blob/master/LICENSE).
