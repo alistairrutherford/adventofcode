@@ -514,6 +514,7 @@ var PASS_PHRASE_LIST = [
   "cgc jazrp crgnna uvuokl uvuokl uoiwl sknmc sknmc",
   "rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub"];
 
+
 main(List<String> arguments) {
 
   Map<String, String> matchMap = new Map();
@@ -533,8 +534,12 @@ main(List<String> arguments) {
     while (wordIterator.moveNext() && !match) {
       String word = wordIterator.current;
 
+      var letters = word.runes.toList();
+      letters.sort();
+      String key = letters.toString();
+
       if (!matchMap.containsKey(word)) {
-        matchMap.putIfAbsent(word, ()=>word);
+        matchMap.putIfAbsent(key, ()=>word);
       } else {
         match = true;
       }
