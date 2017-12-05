@@ -538,7 +538,7 @@ main(List<String> arguments) {
       letters.sort();
       String key = letters.toString();
 
-      if (!matchMap.containsKey(word)) {
+      if (!matchMap.containsKey(key)) {
         matchMap.putIfAbsent(key, ()=>word);
       } else {
         match = true;
