@@ -62,9 +62,9 @@ var JUMPS = [
 main(List<String> arguments) {
   int programCounter = 0;
   int maxLen = JUMPS.length - 1;
-  int steps = 0;
+  int steps = 1;
 
-  // While still inside the
+  // While still inside the program space
   bool finished = false;
   while (!finished) {
     // get jump
@@ -82,5 +82,5 @@ main(List<String> arguments) {
     }
   }
 
-  print('Steps: $steps');
+  print('Program Counter: $programCounter, Steps: $steps');
 }
