@@ -1,3 +1,10 @@
+/**
+ * Now, the jumps are even stranger: after each jump, if the offset was three or
+ * more, instead decrease it by 1. Otherwise, increase it by 1 as before.
+ *
+ * How many steps does it now take to reach the exit?
+ */
+
 var JUMPS = [
   1,1,0,-1,-3,0,-5,-1,2,0,-1,-3,-9,-5,-1,-9,2,2,-13,-7,-13,-18,0,0,-21,
   -10,-2,-12,-18,-4,-27,-24,-16,-10,-24,-12,-5,-31,-17,-10,-22,-16,-3,
