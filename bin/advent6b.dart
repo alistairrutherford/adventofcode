@@ -45,7 +45,7 @@ main(List<String> arguments) {
       } else {
         // initialize for second loop.
         snapshot.clear();
-        memoryMap = MEMORY_BANK.toString();
+        // Reload the map with the target state.
         snapshot.putIfAbsent(memoryMap, ()=>memoryMap);
         found = true;
         cycle = 1;
