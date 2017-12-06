@@ -43,19 +43,19 @@ main(List<String> arguments) {
       if (found) {
         finished = true;
       } else {
-        // Found so go around again.
+        // initialize for second loop.
         snapshot.clear();
         memoryMap = MEMORY_BANK.toString();
         snapshot.putIfAbsent(memoryMap, ()=>memoryMap);
         found = true;
-        cycle = -1;
+        cycle = 1;
       }
 
     } else {
       snapshot.putIfAbsent(memoryMap, ()=>memoryMap);
+      cycle++;
     }
 
-    cycle++;
   }
 
   print('Cycles : $cycle');
