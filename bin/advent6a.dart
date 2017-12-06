@@ -51,13 +51,19 @@ main(List<String> arguments) {
 }
 
 /**
- * Find top bank.
+ * Find top bank, the long way.
  */
 int topBank() {
   int top = 0;
+  int target = 0;
+
   for (int index = 0; index < MEMORY_BANK.length; index++) {
-    if (MEMORY_BANK[index] > top) {
-      top = index;
+    int curr = MEMORY_BANK[index];
+    if (curr > top) {
+      target = index;
+      top = curr;
     }
   }
+
+  return target;
 }
