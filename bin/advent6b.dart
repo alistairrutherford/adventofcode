@@ -1,8 +1,8 @@
 /**
- * Given the initial block counts in your puzzle input, how many redistribution
- * cycles must be completed before a configuration is produced that has been
- * seen before?
+ * How many cycles are in the infinite loop that arises from the configuration
+ * in your puzzle input?
  */
+
 var MEMORY_BANK = [4, 1, 15, 12, 0, 9, 9, 5, 5, 8, 7, 3, 14, 5, 12, 3];
 
 main(List<String> arguments) {
