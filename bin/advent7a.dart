@@ -1,3 +1,7 @@
+/**
+ * What is the name of the bottom program?
+ */
+
 const String NODES =
     "apcztdj ,61;"
     "ulovosc ,61, buzjgp, iimyluk;"
@@ -1076,7 +1080,7 @@ const String NODES =
     "gejaump ,212, iduxx, tiirxay, smpmp;"
     "sidmmmy ,44;"
     "qjnela ,266, andixsk, qfsbvqe;"
-    "idfyy ,51, -> vxnwq, meuyumr, oyjjdj, iqwspxd, aobgmc";
+    "idfyy ,51, vxnwq, meuyumr, oyjjdj, iqwspxd, aobgmc";
 
 class Node {
   String name;
@@ -1124,6 +1128,10 @@ List buildNodes(String definitions) {
   return nodes;
 }
 
+/**
+ * Main.
+ *
+ */
 main(List<String> arguments) {
 
   List nodes = buildNodes(NODES);
@@ -1146,13 +1154,13 @@ main(List<String> arguments) {
   String target = "Not Found";
 
   bool found = false;
-  var iterator = map.keys.iterator;
+  var iterator = nodes.iterator;
   while (!found && iterator.moveNext()) {
-    String current = iterator.current;
+    Node current = iterator.current;
 
-    if (!map.containsKey(current)) {
+    if (!map.containsKey(current.name)) {
       found = true;
-      target = current;
+      target = current.name;
     }
   }
 
