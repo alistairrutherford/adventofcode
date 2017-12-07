@@ -2,6 +2,7 @@
  * What is the name of the bottom program?
  */
 
+/*
 const String NODES =
     "apcztdj ,61;"
     "ulovosc ,61, buzjgp, iimyluk;"
@@ -1081,6 +1082,22 @@ const String NODES =
     "sidmmmy ,44;"
     "qjnela ,266, andixsk, qfsbvqe;"
     "idfyy ,51, vxnwq, meuyumr, oyjjdj, iqwspxd, aobgmc";
+    */
+
+const String NODES=
+    "pbga, 66;"
+    "xhth, 57;"
+    "ebii, 61;"
+    "havc, 66;"
+    "ktlj, 57;"
+    "fwft, 72, ktlj, cntj, xhth;"
+    "qoyq, 66;"
+    "padx, 45, pbga, havc, qoyq;"
+    "tknk, 41, ugml, padx, fwft;"
+    "jptl, 61;"
+    "ugml, 68, gyxo, ebii, jptl;"
+    "gyxo, 61;"
+    "cntj, 57";
 
 class Node {
   String name;
@@ -1151,7 +1168,7 @@ Map buildTree(String definitions) {
 }
 
 /**
- * Traverse tree to build weights.
+ * Traverse tree to build weights and depth.
  *
  */
 void buildWeights(Node node, [int depth=1]) {
@@ -1164,9 +1181,17 @@ void buildWeights(Node node, [int depth=1]) {
 
       node.total += child.total;
     }
+    // Total = sum of children + own weight
+    node.total += node.weight;
   } else {
     node.total = node.weight;
   }
+
+  String name = node.name;
+  int total = node.total;
+  int weight = node.weight;
+  int nodeDepth = node.depth;
+  print('Node : $name, $weight, $total, $nodeDepth');
 }
 
 /**
@@ -1174,7 +1199,8 @@ void buildWeights(Node node, [int depth=1]) {
  *
  */
 main(List<String> arguments) {
-  const String ROOT_NODE = "rqwgj";
+  //const String ROOT_NODE = "rqwgj";
+  const String ROOT_NODE = "tknk";
 
   // Tree
   Map nodes = buildTree(NODES);
@@ -1184,6 +1210,8 @@ main(List<String> arguments) {
 
   // Build weights
   buildWeights(root);
+
+  // Find nodes furthest up the tree that are unbalanced.
 
   print('Root : $root');
 }
