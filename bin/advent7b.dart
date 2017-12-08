@@ -1220,7 +1220,8 @@ bool sameWeights(Node node) {
 }
 
 /**
- * Depth first search to find span of weights which don't match.
+ * Depth first search to find furthest node whose children's weights
+ * don't match.
  *
  */
 Node findNode(Node node) {
@@ -1228,12 +1229,16 @@ Node findNode(Node node) {
   Node target = null;
 
   if (!sameWeights(node)) {
-    // bingo
     target = node;
-  } else {
+
     var iterator = node.children.iterator;
-    while (target == null && iterator.moveNext()) {
-      target = findNode(iterator.current);
+    Node child = null;
+    while (child == null && iterator.moveNext()) {
+      child = findNode(iterator.current);
+    }
+
+    if (child != null) {
+      target = child;
     }
   }
 
@@ -1258,7 +1263,7 @@ main(List<String> arguments) {
   // Build weights
   buildWeights(root);
 
-  // Find nodes furthest up the tree that are unbalanced.
+  // Find node furthest up the tree that is unbalanced.
   Node unbalanced = findNode(root);
 
   int total = unbalanced.total;
