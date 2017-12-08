@@ -2,7 +2,7 @@
  * What is the name of the bottom program?
  */
 
-/*
+
 const String NODES =
     "apcztdj ,61;"
     "ulovosc ,61, buzjgp, iimyluk;"
@@ -1082,8 +1082,9 @@ const String NODES =
     "sidmmmy ,44;"
     "qjnela ,266, andixsk, qfsbvqe;"
     "idfyy ,51, vxnwq, meuyumr, oyjjdj, iqwspxd, aobgmc";
-    */
 
+
+/*
 const String NODES=
     "pbga, 66;"
     "xhth, 57;"
@@ -1098,6 +1099,8 @@ const String NODES=
     "ugml, 68, gyxo, ebii, jptl;"
     "gyxo, 61;"
     "cntj, 57";
+
+*/
 
 class Node {
   String name;
@@ -1195,12 +1198,63 @@ void buildWeights(Node node, [int depth=1]) {
 }
 
 /**
+ * Are all total weights in node the same?
+ *
+ * TODO: There's got to be a better way to do this.
+ */
+bool sameWeights(Node node) {
+
+  bool same = true;
+
+  if (node.children != null && node.children.length >0) {
+    // Get first value
+    var iterator = node.children.iterator;
+    iterator.moveNext();
+    Node current = iterator.current;
+
+    while (same && iterator.moveNext()) {
+      Node next = iterator.current;
+      if (current.total != next.total) {
+        same = false;
+      } else {
+        current = next;
+      }
+    }
+  }
+
+  return same;
+}
+
+/**
+ * Depth first search to find span of weights which don't match.
+ *
+ */
+Node findNode(Node node) {
+
+  Node target = null;
+
+  if (!sameWeights(node)) {
+    // bingo
+    target = node;
+  } else {
+    bool same = true;
+    var iterator = node.children.iterator;
+    while (same && iterator.moveNext()) {
+      target = findNode(iterator.current);
+    }
+  }
+
+  return target;
+}
+
+
+/**
  * Main.
  *
  */
 main(List<String> arguments) {
-  //const String ROOT_NODE = "rqwgj";
-  const String ROOT_NODE = "tknk";
+  const String ROOT_NODE = "rqwgj";
+  //const String ROOT_NODE = "tknk";
 
   // Tree
   Map nodes = buildTree(NODES);
@@ -1212,7 +1266,14 @@ main(List<String> arguments) {
   buildWeights(root);
 
   // Find nodes furthest up the tree that are unbalanced.
+  Node unbalanced = findNode(root);
 
-  print('Root : $root');
+  for (Node child in unbalanced.children) {
+    int total = child.total;
+    int weight = child.weight;
+    String name = child.name;
+    print('name: $name, weight: $weight, total : $total');
+  }
+
 }
 
