@@ -1084,8 +1084,8 @@ const String NODES =
     "idfyy ,51, vxnwq, meuyumr, oyjjdj, iqwspxd, aobgmc";
 
 
-/*
-const String NODES=
+
+const String TEST_NODES=
     "pbga, 66;"
     "xhth, 57;"
     "ebii, 61;"
@@ -1100,7 +1100,6 @@ const String NODES=
     "gyxo, 61;"
     "cntj, 57";
 
-*/
 
 class Node {
   String name;
@@ -1190,11 +1189,6 @@ void buildWeights(Node node, [int depth=1]) {
     node.total = node.weight;
   }
 
-  String name = node.name;
-  int total = node.total;
-  int weight = node.weight;
-  int nodeDepth = node.depth;
-  print('Node : $name, $weight, $total, $nodeDepth');
 }
 
 /**
@@ -1237,9 +1231,8 @@ Node findNode(Node node) {
     // bingo
     target = node;
   } else {
-    bool same = true;
     var iterator = node.children.iterator;
-    while (same && iterator.moveNext()) {
+    while (target == null && iterator.moveNext()) {
       target = findNode(iterator.current);
     }
   }
@@ -1253,10 +1246,10 @@ Node findNode(Node node) {
  *
  */
 main(List<String> arguments) {
-  const String ROOT_NODE = "rqwgj";
   //const String ROOT_NODE = "tknk";
+  //Map nodes = buildTree(TEST_NODES);
 
-  // Tree
+  const String ROOT_NODE = "rqwgj";
   Map nodes = buildTree(NODES);
 
   // Fetch root (we know this from first challenge)
@@ -1267,6 +1260,12 @@ main(List<String> arguments) {
 
   // Find nodes furthest up the tree that are unbalanced.
   Node unbalanced = findNode(root);
+
+  int total = unbalanced.total;
+  int weight = unbalanced.weight;
+  String name = unbalanced.name;
+
+  print('parent: $name, weight: $weight, total : $total');
 
   for (Node child in unbalanced.children) {
     int total = child.total;
