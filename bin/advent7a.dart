@@ -1149,8 +1149,7 @@ main(List<String> arguments) {
   }
 
   // Now find the node whose name is not present in the children
-  // TODO: THere is probably a functional way to do this.
-
+  
   String target = "Not Found";
 
   bool found = false;
