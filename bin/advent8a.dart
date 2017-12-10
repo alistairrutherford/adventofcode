@@ -265,7 +265,6 @@ class CPU {
 }
 
 main(List<String> arguments) {
-
   CPU cpu = new CPU();
 
   cpu.load(PROGRAM_FILE);
