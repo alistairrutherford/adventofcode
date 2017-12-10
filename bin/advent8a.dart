@@ -8,7 +8,6 @@ import 'dart:io';
 import 'dart:convert';
 
 const String PROGRAM_FILE = "advent8.txt";
-//const String PROGRAM_FILE = "advent8test.txt";
 
 enum ActionType { INC, DEC, NOP}
 
