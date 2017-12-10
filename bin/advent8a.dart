@@ -18,6 +18,7 @@ enum ComparisonType {
   LESSTHANOREQUAL,
   GREATERTHANOREQIAL,
   EQUAL,
+  NOTEQUAL,
   NOP
 }
 
@@ -109,6 +110,9 @@ class CPU {
       case '==':
         comparisonType = ComparisonType.EQUAL;
         break;
+      case '!=':
+        comparisonType = ComparisonType.NOTEQUAL;
+        break;
       default:
         comparisonType = ComparisonType.NOP;
         break;
@@ -187,6 +191,9 @@ class CPU {
       case ComparisonType.EQUAL:
         doAction = registerValue == value;
         break;
+      case ComparisonType.NOTEQUAL:
+        doAction = registerValue != value;
+        break;
       default:
         doAction = false;
         break;
@@ -252,7 +259,6 @@ class CPU {
       bool doAction = evaluate(operandA, comparisonType, operandB);
 
       if (doAction) {
-        int i = 0;
         executeAction(register, actionType, value);
       }
     }
@@ -268,13 +274,13 @@ main(List<String> arguments) {
 
   cpu.execute();
 
-  // Dump registers
-  for (String key in cpu.registers.keys) {
-    print('Register: $key, Value: ${cpu.registers[key]}');
-  }
-
   List values = cpu.registers.values.toList();
   if (values.length > 0) {
+
+    // Dump registers
+    for (String key in cpu.registers.keys) {
+      print('Register: $key, Value: ${cpu.registers[key]}');
+    }
 
     values.sort();
 
