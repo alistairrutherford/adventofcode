@@ -47,13 +47,13 @@ class StreanProcessor {
         switch (char) {
           case GROUP_START:
             if (!garbage) {
-              if (!ignoreNext) {
+              if (ignoreNext) {
+                ignoreNext = false;
+              } else {
                 group++;
 
                 // Add to total
                 total +=group;
-              } else {
-                ignoreNext = false;
               }
             }
             break;
