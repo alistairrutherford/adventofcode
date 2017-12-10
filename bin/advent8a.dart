@@ -8,15 +8,17 @@ import 'dart:io';
 import 'dart:convert';
 
 const String PROGRAM_FILE = "advent8.txt";
+//const String PROGRAM_FILE = "advent8test.txt";
 
-enum ActionType { INC, DEC}
+enum ActionType { INC, DEC, NOP}
 
 enum ComparisonType {
   LESSTHAN,
   GRATERTHAN,
   LESSTHANOREQUAL,
   GREATERTHANOREQIAL,
-  EQUAL
+  EQUAL,
+  NOP
 }
 
 /**
@@ -28,37 +30,232 @@ class Instruction {
   int value;
   String operandA;
   ComparisonType comparison;
-  String operandB;
+  int operandB;
 
+  Instruction(this.register,
+              this.action,
+              this.value,
+              this.operandA,
+              this.comparison,
+              this.operandB);
 }
 
 /**
  * Model CPU
+ *
  */
 class CPU {
 
-  Map<String, int> register;
+  Map<String, int> registers;
 
-  List<Instruction> instructions;
+  List<Instruction> program;
 
-  void load(String fileName) {
-
-    Directory current = Directory.current;
-
-    String path = current.toString().split(' ')[1].replaceAll('\'','') + "/bin/advent8.txt";
-
-    var file = new File(path);
-
-    List<String> lines = file.readAsLinesSync(encoding: ASCII);
-
-    for (var l in lines) print (l);
+  CPU() {
+    registers = new Map();
+    program = new List();
   }
 
   /**
    * Convert line to instruction.
    *
+   * b inc 5 if a > 1
+   *
    */
   Instruction toInstruction(String line) {
+    var parts = line.split(' ');
+
+    String register = parts[0].trim();
+
+    String action = parts[1].trim();
+    ActionType actionType = toAction(action);
+
+    int value = int.parse(parts[2].trim());
+
+    String comparison = parts[5].trim();
+    ComparisonType comparisonType = toComparisonType(comparison);
+
+    String operandA = parts[4].trim();
+    int operandB = int.parse(parts[6].trim());
+
+    Instruction instruction = new Instruction(register,
+        actionType,
+        value,
+        operandA,
+        comparisonType,
+        operandB);
+
+    return instruction;
+  }
+
+  /**
+   * Convert to comparison type.
+   *
+   */
+  ComparisonType toComparisonType(String comparison) {
+    ComparisonType comparisonType = ComparisonType.NOP;
+    switch (comparison) {
+      case '<':
+        comparisonType = ComparisonType.LESSTHAN;
+        break;
+      case '>':
+        comparisonType = ComparisonType.GRATERTHAN;
+        break;
+      case '<=':
+        comparisonType = ComparisonType.LESSTHANOREQUAL;
+        break;
+      case '>=':
+        comparisonType = ComparisonType.GREATERTHANOREQIAL;
+        break;
+      case '==':
+        comparisonType = ComparisonType.EQUAL;
+        break;
+      default:
+        comparisonType = ComparisonType.NOP;
+        break;
+    }
+
+    return comparisonType;
+  }
+
+  /**
+   * Convert to action type.
+   *
+   */
+  ActionType toAction(String action) {
+    ActionType actionType = ActionType.NOP;
+    switch (action) {
+      case 'inc':
+        actionType = ActionType.INC;
+        break;
+      case 'dec':
+        actionType = ActionType.DEC;
+        break;
+      default:
+        actionType = ActionType.NOP;
+        break;
+    }
+
+    return actionType;
+  }
+
+
+  /**
+   * Execute the defined instruction action.
+   *
+   */
+  void executeAction(String register, ActionType action, int value) {
+    int currentValue = getRegisterValue(register);
+
+    switch (action) {
+      case ActionType.INC:
+        currentValue += value;
+        break;
+      case ActionType.DEC:
+        currentValue -= value;
+        break;
+      default:
+        // Nop
+        break;
+    }
+
+    // Update register.
+    registers[register] = currentValue;
+  }
+
+  /**
+   * Evaluate the comparison.
+   *
+   */
+  bool evaluate(String register, ComparisonType comparison, int value) {
+    bool doAction = false;
+
+    int registerValue = getRegisterValue(register);
+
+    switch (comparison) {
+      case ComparisonType.LESSTHAN:
+        doAction = registerValue < value;
+        break;
+      case ComparisonType.GRATERTHAN:
+        doAction = registerValue > value;
+        break;
+      case ComparisonType.LESSTHANOREQUAL:
+        doAction = registerValue <= value;
+        break;
+      case ComparisonType.GREATERTHANOREQIAL:
+        doAction = registerValue >= value;
+        break;
+      case ComparisonType.EQUAL:
+        doAction = registerValue == value;
+        break;
+      default:
+        doAction = false;
+        break;
+    }
+
+    return doAction;
+  }
+
+  /**
+   * Fetch register value.
+   *
+   */
+  int getRegisterValue(String register) {
+    int value = registers[register];
+    // If not found then initialise
+    if (value == null) {
+      registers.putIfAbsent(register, ()=>0);
+      value = 0;
+    }
+
+    return value;
+  }
+
+  /**
+   * Load instructions.
+   *
+   */
+  void load(String fileName) {
+
+    Directory current = Directory.current;
+
+    String path = current.toString().split(' ')[1].replaceAll('\'','') + "/bin/" + fileName;
+
+    var file = new File(path);
+
+    List<String> lines = file.readAsLinesSync(encoding: ASCII);
+
+    for (var line in lines) {
+      if (!line.trim().isEmpty) {
+        Instruction instruction = toInstruction(line);
+        program.add(instruction);
+      }
+    }
+  }
+
+  /**
+   * Execute loaded program.
+   *
+   * b inc 5 if a > 1
+   *
+   */
+  void execute() {
+
+    for (Instruction instruction in program) {
+      String register = instruction.register;
+      ActionType actionType = instruction.action;
+      int value = instruction.value;
+
+      String operandA = instruction.operandA;
+      ComparisonType comparisonType = instruction.comparison;
+      int operandB = instruction.operandB;
+
+      bool doAction = evaluate(operandA, comparisonType, operandB);
+
+      if (doAction) {
+        int i = 0;
+        executeAction(register, actionType, value);
+      }
+    }
 
   }
 }
@@ -69,5 +266,21 @@ main(List<String> arguments) {
 
   cpu.load(PROGRAM_FILE);
 
+  cpu.execute();
+
+  // Dump registers
+  for (String key in cpu.registers.keys) {
+    print('Register: $key, Value: ${cpu.registers[key]}');
+  }
+
+  List values = cpu.registers.values.toList();
+  if (values.length > 0) {
+
+    values.sort();
+
+    int largest = values[values.length-1];
+
+    print('Largest value : $largest');
+  }
 
 }

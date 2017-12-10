@@ -1,4 +1,3 @@
-
 g dec 231 if bfx > -10
 k dec -567 if wfk == 0
 jq inc 880 if a < 2
