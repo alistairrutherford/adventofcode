@@ -42,7 +42,6 @@ class Instruction {
 
 /**
  * Model CPU
- *
  */
 class CPU {
 
