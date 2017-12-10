@@ -12,22 +12,96 @@ const String FILE_NAME = "advent9input.txt";
 
 class StreanProcessor {
 
+  /**
+   * Load instructions.
+   *
+   */
+  List<String> load(String fileName) {
+
+    Directory current = Directory.current;
+
+    String path = current.toString().split(' ')[1].replaceAll('\'','') + "/bin/" + fileName;
+
+    var file = new File(path);
+
+    List<String> lines = file.readAsLinesSync(encoding: ASCII);
+
+    return lines;
+  }
+
+  /**
+   * Process data.
+   *
+   */
+  void process(List<String> lines) {
+    int total = 0;
+
+    int group;
+    bool garbage;
+    bool ignoreNext;
+
+    for (String line in lines) {
+      for (int i=0; i< line.length; i++) {
+        String char = line[i].trim();
+
+        switch (char) {
+          case GROUP_START:
+            if (!garbage) {
+              if (!ignoreNext) {
+                group++;
+
+                // Add to total
+                total +=group;
+              } else {
+                ignoreNext = false;
+              }
+            }
+            break;
+          case GROUP_END:
+            if (!garbage) {
+              if (!ignoreNext) {
+                group--;
+              } else {
+                ignoreNext = false;
+              }
+            }
+            break;
+          case GARBAGE_START:
+            if (!garbage) {
+              if (!ignoreNext) {
+                garbage = true;
+              } else {
+                ignoreNext = false;
+              }
+            }
+            break;
+          case GARBAGE_END:
+            if (garbage) {
+              if (!ignoreNext) {
+                garbage = true;
+              } else {
+                ignoreNext = false;
+              }
+            }
+            break;
+        }
+
+      }
+    }
+  }
+
 }
 
+/**
+ * Main.
+ *
+ */
 main(List<String> arguments) {
 
-  Directory current = Directory.current;
+  StreanProcessor streanProcessor = new StreanProcessor();
 
-  String path = current.toString().split(' ')[1].replaceAll('\'','') + "/bin/" + FILE_NAME;
+  List<String> lines = streanProcessor.load(FILE_NAME);
 
-  Stream<List<int>> stream = new File(path).openRead();
-
-  stream.transform(UTF8.decoder)
-      .listen((value) {
-
-    String char = value;
-    stdout.write(char);
-  });
-
+  streanProcessor.process(lines);
 
 }
