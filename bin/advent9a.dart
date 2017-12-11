@@ -57,7 +57,9 @@ class StreanProcessor {
             break;
           case GROUP_END:
             if (!garbage) {
-              depth--;
+              if (depth >0) {
+                depth--;
+              }
             }
             break;
           case GARBAGE_START:
