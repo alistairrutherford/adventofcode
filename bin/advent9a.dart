@@ -36,7 +36,6 @@ class StreanProcessor {
     List<int> results = new List();
 
     int depth = 0;
-    bool group = false;
     bool garbage = false;
     bool ignoreNext = false;
 
@@ -47,48 +46,44 @@ class StreanProcessor {
       for (int i=0; i< line.length; i++) {
         String char = line[i].trim();
 
-        switch (char) {
-          case GROUP_START:
-            if (!garbage) {
-              depth++;
-              // Add to total
-              total +=depth;
-            }
-            break;
-          case GROUP_END:
-            if (!garbage) {
-              if (depth >0) {
+        if (!ignoreNext) {
+
+          switch (char) {
+            case GROUP_START:
+              if (!garbage) {
+                depth++;
+                // Add to total
+                total += depth;
+              }
+              break;
+            case GROUP_END:
+              if (!garbage) {
                 depth--;
               }
-            }
-            break;
-          case GARBAGE_START:
-            if (!garbage) {
+              break;
+            case GARBAGE_START:
+              if (!garbage) {
                 garbage = true;
-            }
-            break;
-          case GARBAGE_END:
-            if (garbage) {
-              if (ignoreNext) {
-                ignoreNext = false;
-              } else {
-                garbage = false;
               }
-            }
-            break;
-          case IGNORE_NEXT:
-            if (garbage) {
-              if (ignoreNext) {
-                ignoreNext = false;
-              } else {
+              break;
+            case GARBAGE_END:
+              if (garbage) {
+                  garbage = false;
+              }
+              break;
+            case IGNORE_NEXT:
+              if (garbage) {
                 ignoreNext = true;
               }
-            }
-            break;
-          default:
-            break;
+              break;
+            default:
+              break;
+          }
+        } else {
+          ignoreNext = false;
         }
       }
+
 
       results.add(total);
     }
@@ -107,13 +102,6 @@ main(List<String> arguments) {
   StreanProcessor streanProcessor = new StreanProcessor();
 
   List<String> lines = streanProcessor.load(FILE_NAME);
-
-//  List<String> lines = [ "{{{}}}",
-//                         "{{},{}}",
-//                         "{{{},{},{{}}}}",
-//                        "{{<ab>},{<ab>},{<ab>},{<ab>}}",
-//                        "{{<!!>},{<!!>},{<!!>},{<!!>}}",
-//                         "{{<a!>},{<a{}!>},{<a!>},{<ab>}}"];
 
   List<int> totals = streanProcessor.process(lines);
 
