@@ -1,3 +1,7 @@
+/**
+ * What is the total score for all groups in your input?
+ */
+
 import 'dart:io';
 import 'dart:convert';
 
