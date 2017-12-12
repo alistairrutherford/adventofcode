@@ -43,11 +43,10 @@ class StreanProcessor {
     int depth = 0;
     bool garbage = false;
     bool ignoreNext = false;
-    int totalGarbage = 0;
 
     for (String line in lines) {
 
-      int total = 0;
+      int totalGarbage = 0;
 
       for (int i=0; i< line.length; i++) {
         String char = line[i].trim();
@@ -55,14 +54,28 @@ class StreanProcessor {
         if (!ignoreNext) {
 
           switch (char) {
+            case GROUP_START:
+              if (garbage) {
+                totalGarbage++;
+              }
+              break;
+            case GROUP_END:
+              if (garbage) {
+                totalGarbage++;
+              }
+              break;
             case GARBAGE_START:
               if (!garbage) {
                 garbage = true;
+              } else {
+                totalGarbage++;
               }
               break;
             case GARBAGE_END:
               if (garbage) {
                 garbage = false;
+              } else {
+              totalGarbage++;
               }
               break;
             case IGNORE_NEXT:
@@ -71,15 +84,14 @@ class StreanProcessor {
               }
               break;
             default:
+              if (garbage) {
+                totalGarbage++;
+              }
               break;
           }
 
         } else {
           ignoreNext = false;
-        }
-
-        if (garbage && !ignoreNext) {
-          totalGarbage++;
         }
 
       }
