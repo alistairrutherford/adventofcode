@@ -1,5 +1,10 @@
+/**
+ * what is the result of multiplying the first two numbers in the list?
+ *
+ */
 
 var INPUT = [147,37,249,1,31,2,226,0,161,71,254,243,183,255,30,70];
+
 
 const SIZE = 256;
 
@@ -12,20 +17,16 @@ class HashArray {
     }
   }
 
-  int length() {
-    return data.length;
-  }
-
   int get(int index) {
-    if (index > data.length) {
+    if (index > data.length - 1) {
       index = index % data.length;
     }
 
     return data[index];
   }
 
-  void put(int value, int index) {
-    if (index > data.length) {
+  void put(int index, int value) {
+    if (index > data.length - 1) {
       index = index % data.length;
     }
 
@@ -45,12 +46,32 @@ main(List<String> arguments) {
 
   int current = 0;
   int skip = 0;
-  List<int> subValue = new List();
+
   for (int value in INPUT) {
 
+    int count = value ~/ 2;
 
+    for (int i = 0; i < count; i++) {
 
+      int start = current + i;
+      int end = current + value - 1 - i;
+
+      int first = hashArray.get(start);
+      int last = hashArray.get(end);
+
+      hashArray.put(start, last);
+      hashArray.put(end, first);
+    }
+
+    current += value + skip++;
+    if (current > SIZE) {
+      current = current % SIZE;
+    }
   }
 
-  print("${hashArray.data.length}");
+  int first = hashArray.get(0);
+  int second = hashArray.get(1);
+  int mult = first * second;
+
+  print("$first, $second, $mult");
 }
