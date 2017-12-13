@@ -1,5 +1,7 @@
 /**
- * what is the result of multiplying the first two numbers in the list?
+ * Treating your puzzle input as a string of ASCII characters, what is the Knot
+ * Hash of your puzzle input? Ignore any leading or trailing whitespace you
+ * might encounter.
  *
  */
 import 'dart:convert';
@@ -46,7 +48,7 @@ class HashArray {
  */
 main(List<String> arguments) {
 
-  HashArray hashArray = new HashArray(SIZE);
+  HashArray sparseHashArray = new HashArray(SIZE);
 
   int current = 0;
   int skip = 0;
@@ -58,6 +60,8 @@ main(List<String> arguments) {
   values.addAll(encoded);
   values.addAll(TAIL_SEQ);
 
+  // Build sparse hash
+
   for (int round = 0; round < MAX_ROUND; round++) {
     for (int value in values) {
       int count = value ~/ 2;
@@ -66,11 +70,11 @@ main(List<String> arguments) {
         int start = current + i;
         int end = current + value - 1 - i;
 
-        int first = hashArray.get(start);
-        int last = hashArray.get(end);
+        int first = sparseHashArray.get(start);
+        int last = sparseHashArray.get(end);
 
-        hashArray.put(start, last);
-        hashArray.put(end, first);
+        sparseHashArray.put(start, last);
+        sparseHashArray.put(end, first);
       }
 
       current += value + skip++;
@@ -80,10 +84,28 @@ main(List<String> arguments) {
     }
   }
 
+  // Build dense hash
+  List<int> denseHash = new List();
+  int block = 0;
+  int xor = 0;
+  for (int i = 0; i < SIZE; i++) {
+    int value = sparseHashArray.get(i);
+    xor = xor ^ value;
+    block++;
 
-  int first = hashArray.get(0);
-  int second = hashArray.get(1);
-  int mult = first * second;
+    if (block == 16) {
+      denseHash.add(xor);
+      block = 0;
+      xor = 0;
+    }
+  }
 
-  print("$first, $second, $mult");
+  String output = "";
+  for (int hash in denseHash) {
+    var hex = hash.toRadixString(16).padLeft(2, "0");
+
+    output += hex;
+  }
+
+  print("$output");
 }
