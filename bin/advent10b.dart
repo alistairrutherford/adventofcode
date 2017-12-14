@@ -3,7 +3,28 @@
  * Hash of your puzzle input? Ignore any leading or trailing whitespace you
  * might encounter.
  *
+ * Help from :
+ * http://www.markheath.net/post/advent-of-code-2017-day-11
+ * https://www.redblobgames.com/grids/hexagons/#coordinates
+ *
+               \ n  /
+            nw +--+ ne
+              /    \
+            -+      +-
+              \    /
+            sw +--+ se
+              / s  \
+
+          x, y, z
+    "n": [0,1,-1],
+    "s": [0,-1,1],
+    "nw": [-1,1,0],
+    "se": [1,-1,0],
+    "ne": [1,0,-1],
+    "sw": [-1,0,1],
+    }
  */
+
 import 'dart:convert';
 
 var INOUT_STR = "147,37,249,1,31,2,226,0,161,71,254,243,183,255,30,70";
