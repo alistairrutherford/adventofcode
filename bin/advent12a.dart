@@ -1,9 +1,13 @@
 /**
  * Advent 12 (part a).
  *
+ * How many programs are in the group that contains program ID 0?
+ *
  */
 import 'dart:io';
 import 'dart:convert';
+
+const String INPUT_DATA = "advent12input.txt";
 
 class Program {
   String id = "";
@@ -50,15 +54,29 @@ class Village {
   }
 
   /**
+   * Count in group.
+   *
+   */
+  int countGroup(String id) {
+    Map<String, String> visited = new Map();
+    return countChildren(id, visited);
+  }
+
+  /**
    * Traverse associated nodes and count children.
    *
    */
-  int countChildren(String id, [int curr = 0]) {
-
+  int countChildren(String id, Map<String, String> visited, [int curr = 0]) {
     Program node = programs[id];
+
     if (node != null) {
       for (Program child in node.children)
-        countChildren(child.id, curr + 1);
+        if (visited[child.id] == null) {
+          countChildren(child.id, visited, curr + 1);
+        } else {
+          visited.putIfAbsent(child.id, ()=>child.id);
+        }
+
     }
 
     return curr;
@@ -98,4 +116,11 @@ class Village {
 
 main(List<String> arguments) {
 
+  Village village = new Village();
+
+  village.load(INPUT_DATA);
+
+  int count = village.countGroup("0");
+
+  print("Answer : $count");
 }
