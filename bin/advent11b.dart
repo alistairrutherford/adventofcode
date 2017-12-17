@@ -98,14 +98,19 @@ main(List<String> arguments) {
 
   List <String> moves = pathFinder.load(INPUT_DATA);
 
+  Move initial = new Move(0, 0, 0);
+  int max = 0;
+
   for (String move in moves) {
     pathFinder.move(move.trim());
+
+    int distance = pathFinder.currentDistanceFrom(initial);
+
+    if (distance > max) {
+      max = distance;
+    }
   }
 
-  // Calculare distance;
-  Move initial = new Move(0, 0, 0);
-  int distance = pathFinder.currentDistanceFrom(initial);
-
-  print("distance: $distance");
+  print("max distance: $max");
 
 }
