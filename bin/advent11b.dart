@@ -79,8 +79,8 @@ class PathFinder {
   /**
    * Move position,
    */
-  void move(String moveTo) {
-    Move move = MOVES[moveTo];
+  void move(String moveBy) {
+    Move move = MOVES[moveBy];
     if (move != null) {
       current.x = current.x + move.x;
       current.y = current.y + move.y;

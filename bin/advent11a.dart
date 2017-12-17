@@ -79,8 +79,8 @@ class PathFinder {
   /**
    * Move position,
    */
-  void move(String moveTo) {
-    Move move = MOVES[moveTo];
+  void move(String moveBy) {
+    Move move = MOVES[moveBy];
     if (move != null) {
       current.x = current.x + move.x;
       current.y = current.y + move.y;
@@ -102,7 +102,7 @@ main(List<String> arguments) {
     pathFinder.move(move.trim());
   }
 
-  // Calculare distance;
+  // Calculate distance;
   Move initial = new Move(0, 0, 0);
   int distance = pathFinder.currentDistanceFrom(initial);
 
