@@ -59,6 +59,9 @@ class Village {
    */
   int countGroup(String id) {
     Map<String, String> visited = new Map();
+
+    visited.putIfAbsent(id, ()=>id);
+
     return countChildren(id, visited);
   }
 
@@ -66,17 +69,15 @@ class Village {
    * Traverse associated nodes and count children.
    *
    */
-  int countChildren(String id, Map<String, String> visited, [int curr = 0]) {
+  int countChildren(String id, Map<String, String> visited, [int curr = 1]) {
     Program node = programs[id];
 
-    if (node != null) {
-      for (Program child in node.children)
-        if (visited[child.id] == null) {
-          countChildren(child.id, visited, curr + 1);
-        } else {
-          visited.putIfAbsent(child.id, ()=>child.id);
-        }
+    for (Program child in node.children) {
+      if (visited[child.id] == null) {
+        visited.putIfAbsent(child.id, () => child.id);
 
+        curr = countChildren(child.id, visited, curr + 1);
+      }
     }
 
     return curr;
