@@ -34,8 +34,17 @@ class Village {
   int countTotalGroups() {
     int total = 0;
 
-    for (String id in programs.keys) {
-      total += countGroup(id);
+    List<String> keys = programs.keys.toList();
+    List<String> programKeys = new List();
+    programKeys.addAll(keys);
+
+    for (String id in programKeys) {
+      int count = countGroup(id);
+      if (count > 1) {
+        total++;
+      } else {
+        print("$id");
+      }
     }
 
     return total;
@@ -50,7 +59,29 @@ class Village {
 
     visited.putIfAbsent(id, ()=>id);
 
-    return countChildren(id, visited);
+    return countUniqueChildren(id, visited);
+  }
+
+  /**
+   * Traverse associated nodes and count children.
+   *
+   */
+  int countUniqueChildren(String id, Map<String, String> visited, [int curr = 1]) {
+    Program node = programs[id];
+
+    if (node != null) {
+      for (Program child in node.children) {
+        if (visited[child.id] == null) {
+          visited.putIfAbsent(child.id, () => child.id);
+
+          programs.remove(id);
+
+          curr = countChildren(child.id, visited, curr + 1);
+        }
+      }
+    }
+
+    return curr;
   }
 
   /**
@@ -59,12 +90,13 @@ class Village {
    */
   int countChildren(String id, Map<String, String> visited, [int curr = 1]) {
     Program node = programs[id];
+    if (node != null) {
+      for (Program child in node.children) {
+        if (visited[child.id] == null) {
+          visited.putIfAbsent(child.id, () => child.id);
 
-    for (Program child in node.children) {
-      if (visited[child.id] == null) {
-        visited.putIfAbsent(child.id, () => child.id);
-
-        curr = countChildren(child.id, visited, curr + 1);
+          curr = countChildren(child.id, visited, curr + 1);
+        }
       }
     }
 
@@ -136,5 +168,5 @@ main(List<String> arguments) {
 
   int count = village.countTotalGroups();
 
-  print("Answer : $count");
+  print("Answer : $count, total: ${village.programs.length}");
 }
