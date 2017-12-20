@@ -28,80 +28,35 @@ class Village {
   Map<String, Program> programs = new Map();
 
   /**
-   * Count total number of groups.
-   *
-   */
-  int countTotalGroups() {
-    int total = 0;
-
-    List<String> keys = programs.keys.toList();
-    List<String> programKeys = new List();
-    programKeys.addAll(keys);
-
-    for (String id in programKeys) {
-      int count = countGroup(id);
-      if (count > 1) {
-        total++;
-      } else {
-        print("$id");
-      }
-    }
-
-    return total;
-  }
-
-  /**
    * Count in group.
    *
    */
-  int countGroup(String id) {
-    Map<String, String> visited = new Map();
+  int countGroups() {
+    int total = 0;
 
-    visited.putIfAbsent(id, ()=>id);
+    for (String id in programs.keys) {
 
-    return countUniqueChildren(id, visited);
-  }
+      Program program = programs[id];
 
-  /**
-   * Traverse associated nodes and count children.
-   *
-   */
-  int countUniqueChildren(String id, Map<String, String> visited, [int curr = 1]) {
-    Program node = programs[id];
+      // if only one child
+      if (program.children.length == 1) {
 
-    if (node != null) {
-      for (Program child in node.children) {
-        if (visited[child.id] == null) {
-          visited.putIfAbsent(child.id, () => child.id);
+        // Check to see if only child references parent
+        Iterable<Program> look = program.children.where((p)=> p.id == id);
 
-          programs.remove(id);
-
-          curr = countChildren(child.id, visited, curr + 1);
+        //If not pointing to parent then group
+        if (look.length == 0) {
+          total++;
+        } else {
+          print("$id, ${program.children[0].id}");
         }
       }
+
     }
 
-    return curr;
+    return programs.length - total;
   }
 
-  /**
-   * Traverse associated nodes and count children.
-   *
-   */
-  int countChildren(String id, Map<String, String> visited, [int curr = 1]) {
-    Program node = programs[id];
-    if (node != null) {
-      for (Program child in node.children) {
-        if (visited[child.id] == null) {
-          visited.putIfAbsent(child.id, () => child.id);
-
-          curr = countChildren(child.id, visited, curr + 1);
-        }
-      }
-    }
-
-    return curr;
-  }
 
   /**
    * Find program in map.
@@ -137,7 +92,25 @@ class Village {
 
         Program childProgram = getProgram(child);
 
-        program.children.add(childProgram);
+        // Look to see if this child doesn't already exist
+        Iterable<Program> exists = program.children.where((p)=> p.id == child);
+
+        if (exists.length == 0) {
+          program.children.add(childProgram);
+        } else {
+          print("already exists");
+        }
+
+        // Look for this node against child mode
+        Iterable<Program> joined = childProgram.children.where((p)=> p.id == id);
+
+        // If found not already linked then link back
+        if (joined.length == 0) {
+          childProgram.children.add(program);
+        } else {
+          print("already linked back");
+        }
+
       }
 
     }
@@ -166,7 +139,7 @@ main(List<String> arguments) {
 
   village.load(INPUT_DATA);
 
-  int count = village.countTotalGroups();
+  int count = village.countGroups();
 
-  print("Answer : $count, total: ${village.programs.length}");
+  print("Answer : $count");
 }
