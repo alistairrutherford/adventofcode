@@ -1,7 +1,7 @@
 /**
- * Advent 12 (part b).
+ * Advent 12 (part a).
  *
- * How many groups are there in total?
+ * How many programs are in the group that contains program ID 0?
  *
  */
 import 'dart:io';
@@ -26,28 +26,19 @@ class Program {
  */
 class Village {
   Map<String, Program> programs = new Map();
+  Map<String, int> usedNode = new Map();
 
-  /**
-   * Count total number of groups.
-   *
-   */
-  int countTotalGroups() {
-    int total = 0;
+  int countUniqueGroups() {
 
-    List<String> keys = programs.keys.toList();
-    List<String> programKeys = new List();
-    programKeys.addAll(keys);
+    int count = 0;
 
-    for (String id in programKeys) {
-      int count = countGroup(id);
-      if (count > 1) {
-        total++;
-      } else {
-        print("$id");
-      }
+    // Count the number of groups in each item.
+    for (String id in programs.keys) {
+
+
     }
 
-    return total;
+
   }
 
   /**
@@ -59,29 +50,7 @@ class Village {
 
     visited.putIfAbsent(id, ()=>id);
 
-    return countUniqueChildren(id, visited);
-  }
-
-  /**
-   * Traverse associated nodes and count children.
-   *
-   */
-  int countUniqueChildren(String id, Map<String, String> visited, [int curr = 1]) {
-    Program node = programs[id];
-
-    if (node != null) {
-      for (Program child in node.children) {
-        if (visited[child.id] == null) {
-          visited.putIfAbsent(child.id, () => child.id);
-
-          programs.remove(id);
-
-          curr = countChildren(child.id, visited, curr + 1);
-        }
-      }
-    }
-
-    return curr;
+    return countChildren(id, visited);
   }
 
   /**
@@ -90,13 +59,12 @@ class Village {
    */
   int countChildren(String id, Map<String, String> visited, [int curr = 1]) {
     Program node = programs[id];
-    if (node != null) {
-      for (Program child in node.children) {
-        if (visited[child.id] == null) {
-          visited.putIfAbsent(child.id, () => child.id);
 
-          curr = countChildren(child.id, visited, curr + 1);
-        }
+    for (Program child in node.children) {
+      if (visited[child.id] == null) {
+        visited.putIfAbsent(child.id, () => child.id);
+
+        curr = countChildren(child.id, visited, curr + 1);
       }
     }
 
@@ -141,6 +109,7 @@ class Village {
       }
 
     }
+
   }
 
   /**
@@ -166,7 +135,7 @@ main(List<String> arguments) {
 
   village.load(INPUT_DATA);
 
-  int count = village.countTotalGroups();
+  int count = village.countUniqueGroups();
 
-  print("Answer : $count, total: ${village.programs.length}");
+  print("Answer : $count");
 }
