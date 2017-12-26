@@ -16,7 +16,9 @@ class Layer {
   Layer(this.depth, this.range);
 
   void step() {
-    scanner = (scanner + 1) % range;
+    if (range > 0) {
+      scanner = (scanner + 1) % range;
+    }
   }
 
   void initialise() {
@@ -29,11 +31,6 @@ class Firewall {
 
   int packet = 0;
   int cost = 0;
-
-  void addLayer(int depth, int range) {
-    Layer layer = new Layer(depth, range);
-    layers.add(layer);
-  }
 
 
   /**
@@ -49,7 +46,7 @@ class Firewall {
     for (Layer layer in layers) {
 
       // Are we on a layer with scanner in position 0?
-      if (layer.depth == packet && layer.scanner == 0) {
+      if (layer.range > 0 && layer.depth == packet && layer.scanner == 0) {
         cost += layer.depth * layer.range;
       }
 
@@ -82,17 +79,34 @@ class Firewall {
    *
    */
   void load(fileName) {
+    layers.clear();
+
     List<String> lines = loadInput(fileName);
 
-    // Now convert ino tree nodes.
+    int maxDepth = 0;
+    Map<int, Layer> depths = new Map();
     for (String line in lines) {
       var parts = line.split(":");
       int depth = int.parse(parts[0].trim());
       int range = int.parse(parts[1].trim());
 
-      addLayer(depth, range);
+      Layer layer = new Layer(depth, range);
+      depths.putIfAbsent(depth, ()=>layer);
+
+      if (depth > maxDepth) {
+        maxDepth = depth;
+      }
     }
 
+    for (int depth = 0; depth < maxDepth; depth++) {
+      Layer layer = depths[depth];
+
+      if (layer == null) {
+        layers.add(new Layer(depth, 0));
+      } else {
+        layers.add(layer);
+      }
+    }
   }
 
   /**
