@@ -1,6 +1,5 @@
 /**
- * Given the details of the firewall you've recorded, if you leave immediately,
- * what is the severity of your whole trip?
+ * AdventOfCode 2
  *
  */
 import 'dart:io';
@@ -28,7 +27,6 @@ bool validate(String definition) {
 
       character = parts[1].codeUnitAt(0);
       password = parts[2];
-
 
       int index = 0;
       int count = 0;

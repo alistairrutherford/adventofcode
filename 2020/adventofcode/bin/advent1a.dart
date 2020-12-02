@@ -1,8 +1,7 @@
 /**
- * Given the details of the firewall you've recorded, if you leave immediately,
- * what is the severity of your whole trip?
- *
- */
+* AdventOfCode 1
+*/
+
 import 'dart:io';
 import 'dart:convert';
 
