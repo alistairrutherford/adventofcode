@@ -7,7 +7,6 @@ import 'dart:convert';
 
 const String INPUT_DATA = "advent3input.txt";
 
-
 /**
  * Load input lines.
  */
@@ -33,7 +32,6 @@ class Move {
 }
 
 main(List<String> arguments) {
-
   // Get characters for tree and space.
   int TREE = '#'.codeUnitAt(0);
 
@@ -52,7 +50,6 @@ main(List<String> arguments) {
 
       int x = 0;
       int y = 0;
-      int charAt;
       bool finished = false;
       while (!finished) {
         y += yIncrement;
@@ -61,7 +58,7 @@ main(List<String> arguments) {
         } else {
           x = (x + xIncrement) % squaresX;
           String row = rows[y];
-          charAt = row.codeUnitAt(x);
+          int charAt = row.codeUnitAt(x);
           if (charAt == TREE) {
             treeCount++;
           }
@@ -71,15 +68,7 @@ main(List<String> arguments) {
     }
   }
 
-  // WTF - It's getting late. How do you multiply a list of items?
-  int all = -1;
-  for (int total in totals) {
-    if (all == -1) {
-      all = total;
-    } else {
-      all *= total;
-    }
-  }
+  final total = totals.reduce((value, element) => value * element);
 
-  print("Total: ${all}");
+  print("Total: ${total}");
 }
