@@ -11,9 +11,6 @@ const String INPUT_DATA = "advent2input.txt";
  * Validate password definition: 4-8 r: fqnqjbsssqrrwrrrrr
  */
 bool validate(String definition) {
-  int lowest;
-  int highest;
-  int character;
   String password;
   bool status = false;
 
@@ -22,10 +19,10 @@ bool validate(String definition) {
     var range = parts[0];
     var lowerHigher = range.split("-");
     if (lowerHigher.length == 2) {
-      lowest = int.parse(lowerHigher[0]);
-      highest = int.parse(lowerHigher[1]);
+      int lowest = int.parse(lowerHigher[0]);
+      int highest = int.parse(lowerHigher[1]);
 
-      character = parts[1].codeUnitAt(0);
+      int character = parts[1].codeUnitAt(0);
       password = parts[2];
 
       int index = 0;
