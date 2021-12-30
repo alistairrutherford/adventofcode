@@ -2,9 +2,12 @@
 * AdventOfCode 1
 */
 
+import 'dart:collection';
 import 'dart:io';
 import 'dart:convert';
 
+// const String INPUT_MOVES = "test_draws.txt";
+// const String INPUT_BOARDS = "test_boards.txt";
 const String INPUT_MOVES = "advent4_draws.txt";
 const String INPUT_BOARDS = "advent4_boards.txt";
 const int BOARD_SIZE = 5;
@@ -241,38 +244,54 @@ main(List<String> arguments) {
   // Load data.
   List<int> draws = loadDraws(INPUT_MOVES);
   List<Board> boards = loadBoards(INPUT_BOARDS);
-  List<Board> winners = List.empty(growable: true);
+  HashMap scores = new HashMap<int, int>();
+  List<int> winners = List.empty(growable: true);
 
   bool finished = false;
-  bool found = false;
   int drawIndex = 0;
   int boardIndex = 0;
   int draw = -1;
-  while (!finished && !found) {
+  while (!finished) {
     draw = draws[drawIndex];
 
     // Pass move to each board until all boards or house
     boardIndex = 0;
     bool boardsFinished = false;
-    while (!boardsFinished && !found) {
+    while (!boardsFinished) {
       Board board = boards[boardIndex];
-      board.markBoard(draw);
-      found = board.house();
-      if (!found) boardIndex++;
+
+      // If not already a winner
+      if (!winners.contains(boardIndex)) {
+        board.markBoard(draw);
+        bool house = board.house();
+
+        // If house on this board then record it.
+        if (house) {
+          if (!winners.contains(boardIndex)) {
+            winners.add(boardIndex);
+            int sum = board.sumUnmarked();
+            scores[boardIndex] =  sum * draw;
+          }
+        }
+      }
+
+
+      boardIndex++;
       boardsFinished = boardIndex >= boards.length;
     }
 
-    if (! found) drawIndex++;
-    
+    drawIndex++;
     finished = drawIndex >= draws.length;
   }
 
-  if (found) {
-    print("Bingo on board: ${boardIndex + 1}");
-    Board bingoBoard = boards[boardIndex];
-    int sum = bingoBoard.sumUnmarked();
-    print("Sum unmarked: $sum");
-    print("Total: ${sum * draw}");
-  }
+  int lastBoard = winners[winners.length -1];
+
+  print("Bingo on board: ${lastBoard + 1}");
+  Board bingoBoard = boards[lastBoard];
+  int sum = bingoBoard.sumUnmarked();
+  print("Sum unmarked: $sum");
+  int score = scores[lastBoard];
+  print("Total: $score");
+
 
 }

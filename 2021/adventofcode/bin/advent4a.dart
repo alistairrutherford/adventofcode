@@ -241,7 +241,6 @@ main(List<String> arguments) {
   // Load data.
   List<int> draws = loadDraws(INPUT_MOVES);
   List<Board> boards = loadBoards(INPUT_BOARDS);
-  List<Board> winners = List.empty(growable: true);
 
   bool finished = false;
   bool found = false;
