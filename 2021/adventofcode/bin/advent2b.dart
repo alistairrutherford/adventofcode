@@ -1,6 +1,6 @@
 /**
-* AdventOfCode 1
-*/
+ * AdventOfCode 2
+ */
 
 import 'dart:io';
 import 'dart:convert';
