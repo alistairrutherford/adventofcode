@@ -260,18 +260,16 @@ main(List<String> arguments) {
     while (!boardsFinished) {
       Board board = boards[boardIndex];
 
-      // If not already a winner
+      // If not already a winner keep applying draws
       if (!winners.contains(boardIndex)) {
         board.markBoard(draw);
         bool house = board.house();
 
         // If house on this board then record it.
         if (house) {
-          if (!winners.contains(boardIndex)) {
-            winners.add(boardIndex);
-            int sum = board.sumUnmarked();
-            scores[boardIndex] =  sum * draw;
-          }
+          winners.add(boardIndex);
+          int sum = board.sumUnmarked();
+          scores[boardIndex] =  sum * draw;
         }
       }
 
