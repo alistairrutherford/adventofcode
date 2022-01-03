@@ -9,11 +9,48 @@ import 'dart:convert';
 
 const String INPUT_FILE = "test_vents.txt";
 
+/*
+ Line : y = mx +c
+ */
 class LineSegment {
   int x1, y1;
   int x2, y2;
 
   LineSegment(this.x1, this.y1, this.x2, this.y2);
+
+  double gradient() {
+    return (y2-y1) / (x2 - x1);
+  }
+
+  double intersectsAtX(LineSegment line) {
+    int x3 = line.x1;
+    int y3 = line.y1;
+    int x4 = line.x2;
+    int y4 = line.y2;
+
+    int d = (((x1 - x2) * (y3 - y4)) - ((y1 - y2) * (x3 - x4)));
+
+    int n = (((x1 * y2) - (y1 * x2)) * (x3 - x4)) - ((x1 - x2) * ((x3 * x4) - (y3 * x4)));
+
+    double x = n / d;
+
+    return x;
+  }
+
+  double intersectsAtY(LineSegment line) {
+    int x3 = line.x1;
+    int y3 = line.y1;
+    int x4 = line.x2;
+    int y4 = line.y2;
+
+    int d = (((x1 - x2) * (y3 - y4)) - ((y1 - y2) * (x3 - x4)));
+
+    int n = (((x1 * y2) - (y1 * x2)) * (y3 - y4)) - ((y1 - y2) * ((x3 * x4) - (y3 * x4)));
+
+    double x = n / d;
+
+    return x;
+  }
 }
 
 /**
@@ -41,6 +78,6 @@ List<LineSegment> loadSegments(String fileName) {
  */
 main(List<String> arguments) {
   // Load data.
-  List<LineSegment> segmens = loadSegments(INPUT_FILE);
+  List<LineSegment> segments = loadSegments(INPUT_FILE);
 
 }
