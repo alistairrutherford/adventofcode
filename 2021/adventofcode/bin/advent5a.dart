@@ -8,6 +8,7 @@ import 'dart:convert';
 
 
 const String INPUT_FILE = "test_vents.txt";
+const int LIMITY = 10;
 
 /*
  Line : y = mx +c
@@ -19,7 +20,7 @@ class LineSegment {
   LineSegment(this.x1, this.y1, this.x2, this.y2);
 
   double gradient() {
-    return (y2-y1) / (x2 - x1);
+    return (y2 - y1) / (x2 - x1);
   }
 
   double intersectsAtX(LineSegment line) {
@@ -51,6 +52,31 @@ class LineSegment {
 
     return x;
   }
+
+  bool doLinesIntersect(LineSegment segment) {
+    if (x1 == x2) {
+      return !(segment.x1 == segment.x2 && x1 != segment.x1);
+    } else if (segment.x1 == segment.x2) {
+      return true;
+    } else {
+      // Both lines are not parallel to the y-axis
+      double m1 = gradient();
+      double m2 = segment.gradient();
+      return m1 != m2;
+    }
+  }
+
+  bool isHorizontalOrVertical() {
+    return isHorizontal() || isVertical();
+  }
+
+  bool isHorizontal() {
+    return y1 == y2;
+  }
+
+  bool isVertical() {
+    return x1 == x2;
+  }
 }
 
 /**
@@ -69,15 +95,91 @@ List<LineSegment> loadSegments(String fileName) {
 
   for (String line in lines) {
 
+    var parts = line.trim().split(" ");
+    var start = parts[0].trim().split(",");
+    var end = parts[2].trim().split(",");
+
+    int x1 = int.parse(start[0].trim());
+    int y1 = int.parse(start[1].trim());
+
+    int x2 = int.parse(end[0].trim());
+    int y2 = int.parse(end[1].trim());
+
+    LineSegment lineSegment = LineSegment(x1, y1, x2, y2);
+
+    segments.add(lineSegment);
   }
   return segments;
 }
 
+void coordsAlongX(int xStart, int xEnd, int constY, Map<String, int> coords) {
+  for (int x=xStart; x<=xEnd; x++) {
+    int count = 1;
+    String coordinate = "(" + x.toString() + "," + constY.toString()+ ")";
+
+    var current = coords[coordinate];
+    if (current != null) {
+      count = (current + 1);
+    }
+    coords[coordinate] = count;
+  }
+}
+
+void coordsAlongY(int yStart, int yEnd, int constX, Map<String, int> coords) {
+  for (int y=yStart; y<=yEnd; y++) {
+    int count = 1;
+    String coordinate = "(" + constX.toString() + "," + y.toString() + ")";
+    var current = coords[coordinate];
+    if (current != null) {
+      count = (current + 1);
+    }
+    coords[coordinate] = count;
+  }
+}
+
 /**
- * Main
+ * Main.
  */
 main(List<String> arguments) {
   // Load data.
   List<LineSegment> segments = loadSegments(INPUT_FILE);
+  Map<String, int> coords = HashMap<String, int>();
 
+  // Build map of position
+  for (LineSegment segment in segments) {
+    int x1 = segment.x1;
+    int y1 = segment.y1;
+    int x2 = segment.x2;
+    int y2 = segment.y2;
+
+    // Only consider horizontal or vertical line segments
+    if (segment.isHorizontalOrVertical() &&
+        segment.isHorizontalOrVertical() ) {
+
+      if (segment.isHorizontal()) {
+        if (x1 > x2) {
+          coordsAlongX(x2, x1, y1, coords);
+        } else {
+          coordsAlongX(x1, x2, y1, coords);
+        }
+      }
+      else
+        if (segment.isVertical()) {
+          if (y1 > y2) {
+            coordsAlongY(y2, y1, x1, coords);
+          } else {
+            coordsAlongY(y1, y2, x1, coords);
+          }
+        }
+    }
+  }
+
+  int total = 0;
+  for (int count in coords.values) {
+    if (count > 1) {
+      total++;
+    }
+  }
+
+  print("Count: $total");
 }
