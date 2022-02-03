@@ -39,26 +39,36 @@ List<int> loadAges(String fileName) {
 main(List<String> arguments) {
   // Load data.
   List<int> ages = loadAges(INPUT_FILE);
-  int days = 80;
+  List<int> counts = List.filled(9, 0); // Fill list of counts
+
+  // Initialise array of counts
+  for (int age in ages) {
+    counts[age]++;
+  }
+
+  int days = 256;
+
+  print("Initial: ${days}, ${counts}");
 
   while (days > 0) {
-    int total = 0;
-    int length = ages.length;
-    int index = 0;
-    while (index < length) {
-      int value = ages[index] - 1;
-      if (value < 0) {
-        value = 6; // Reset fish
-        ages[index] = 6; // put back
-        ages.add(8); // add new fish
-      } else {
-        ages[index] = value;
-      }
-      index++;
+
+    int toZero = counts [0];
+    // Shuffle down
+    for (int index = 0; index < counts.length-1; index++) {
+      counts[index] = counts[index+1];
     }
-    //print("Day: ${days}, ${ages}");
+    counts[6] = counts[6] + toZero;
+    counts[8] = toZero;
+
+    //print("Day: ${days}, ${counts}");
+
     days--;
   }
 
-  print("Total: ${ages.length}");
+  int total = 0;
+  for (int value in counts) {
+    total += value;
+  }
+
+  print("Total: ${total}");
 }

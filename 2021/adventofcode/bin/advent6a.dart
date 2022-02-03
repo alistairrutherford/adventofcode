@@ -39,7 +39,7 @@ List<int> loadAges(String fileName) {
 main(List<String> arguments) {
   // Load data.
   List<int> ages = loadAges(INPUT_FILE);
-  int days = 80;
+  int days = 18;
 
   while (days > 0) {
     int total = 0;
