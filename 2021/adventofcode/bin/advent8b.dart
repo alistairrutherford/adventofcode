@@ -6,7 +6,7 @@ import 'dart:collection';
 import 'dart:io';
 import 'dart:convert';
 
-const String INPUT_FILE = "advent8.txt";
+const String INPUT_FILE = "advent8b.txt";
 
 /**
  * Sort input string letters alphabetically.
@@ -37,6 +37,7 @@ int sharedDigits(var numberString, String inputString) {
   }
   return shared;
 }
+
 class Sample {
   List<String> signals = List<String>.empty(growable: true);
   List<String> outputs = List<String>.empty(growable: true);
@@ -65,7 +66,7 @@ List<Sample> loadInput(String fileName) {
     sample.signals.addAll(signals);
     sample.outputs.addAll(outputs);
 
-    // Sort the values and rebuilt the lists.
+    // Sort the values and rebuild the lists.
     var temp = sample.signals.map((e) => sortString(e)).toList();
     sample.signals.replaceRange(0, sample.signals.length, temp);
     temp = sample.outputs.map((e) => sortString(e)).toList();
@@ -80,47 +81,39 @@ List<Sample> loadInput(String fileName) {
 
 /**
  * Main.
- *
- * V : S
- * --|--
- * 0 : 6
- * 1 : 2 *
- * 2 : 5
- * 3 : 5
- * 4 : 4 *
- * 5 : 5
- * 6 : 6
- * 7 : 3 *
- * 8 : 7 *
- * 9 : 6
  */
 main(List<String> arguments) {
   // Load data.
   List<Sample> samples = loadInput(INPUT_FILE);
 
-
   int total = 0;
+
+  HashMap<String, String> CODE = HashMap<String, String>();
+  HashMap<int, String> VALUE = HashMap<int, String>();
+
+  // Pull out the ones we know.
   for (Sample sample  in samples) {
-    // Pre-fill our map with the digits we know.
-    Map<String, int> CODE = HashMap<String, int>.identity();
-    Map<int, String> VALUE = HashMap<int, String>.identity();
+
+    CODE.clear();
+    VALUE.clear();
+
     for (String signal in sample.signals) {
       int len = signal.length;
       switch (len) {
         case 2:
-          CODE[signal] = 1;
+          CODE[signal] = "1";
           VALUE[1] = signal;
           break;
         case 3:
-          CODE[signal] = 7;
+          CODE[signal] = "7";
           VALUE[7] = signal;
           break;
         case 4:
-          CODE[signal] = 4;
+          CODE[signal] = "4";
           VALUE[4] = signal;
           break;
         case 7:
-          CODE[signal] = 8;
+          CODE[signal] = "8";
           VALUE[8] = signal;
           break;
       }
@@ -135,34 +128,34 @@ main(List<String> arguments) {
       int sharedWith8 = sharedDigits(VALUE[8], signal);
 
       if (sharedWith1==2 && sharedWith4==3 && sharedWith7==3 && sharedWith8==6) {
-        CODE[signal] = 0;
+        CODE[signal] = "0";
         VALUE[0] = signal;
       } else if (sharedWith1==1 && sharedWith4==2 && sharedWith7==2 && sharedWith8==5) {
-        CODE[signal] = 2;
+        CODE[signal] = "2";
         VALUE[2] = signal;
       } else if (sharedWith1==2 && sharedWith4==3 && sharedWith7==3 && sharedWith8==5) {
-        CODE[signal] = 3;
+        CODE[signal] = "3";
         VALUE[3] = signal;
       } else if (sharedWith1==1 && sharedWith4==3 && sharedWith7==2 && sharedWith8==5) {
-        CODE[signal] = 5;
+        CODE[signal] = "5";
         VALUE[5] = signal;
       } else if (sharedWith1==1 && sharedWith4==3 && sharedWith7==2 && sharedWith8==6) {
-        CODE[signal] = 6;
+        CODE[signal] = "6";
         VALUE[6] = signal;
       } else if (sharedWith1==2 && sharedWith4==4 && sharedWith7==3 && sharedWith8==6) {
-        CODE[signal] = 9;
+        CODE[signal] = "9";
         VALUE[9] = signal;
       }
-      print("$CODE");
     }
 
+    String composed = "0";
     for (String output in sample.outputs) {
-      int? value = CODE["bcdef"];
+      String? value = CODE[output];
       if (value != null) {
-        total += value;
+        composed += value;
       }
-
     }
+    total += int.parse(composed);
   }
 
   print("Total: $total");
