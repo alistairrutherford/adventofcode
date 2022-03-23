@@ -148,7 +148,7 @@ int basinCount(Node? node, [int current = 0]) {
     List<Node> nodes = loadInput(INPUT_FILE);
     List<int> counts = List<int>.empty(growable: true);
 
-    // Generate all the counts from the data.
+    // Find lowest starting points.
     for (Node node in nodes) {
       if (node.isLowest()) {
         int basinSize = basinCount(node);
@@ -157,8 +157,10 @@ int basinCount(Node? node, [int current = 0]) {
       }
     }
 
+    // Sort in descending order.
     counts.sort((b, a) => a.compareTo(b));
 
+    // Pull out top 3 results and generate result.
     int total = 1;
     if (counts.length >=3) {
       for (int index = 0; index < 3; index++) {
