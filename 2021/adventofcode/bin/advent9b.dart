@@ -57,7 +57,7 @@ List<Node> loadInput(String fileName) {
 }
 
 class Node {
-  late int value;
+  int value;
   bool visited = false;
 
   Node? leftNode;
