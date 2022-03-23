@@ -103,7 +103,7 @@ class Node {
 
 
 ///
-/// Traverse the basic from this node and count the number of nodes.
+/// Traverse the basin nodes adjacent this node and count the number of nodes.
 ///
 int basinCount(Node? node, [int current = 0]) {
 
