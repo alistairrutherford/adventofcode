@@ -101,9 +101,9 @@ class Node {
 
 }
 
-
 ///
-/// Traverse the basin nodes adjacent this node and count the number of nodes.
+/// Traverse the basin nodes adjacent to starting node and count the number of
+/// valid nodes.
 ///
 int basinCount(Node? node, [int current = 0]) {
 
