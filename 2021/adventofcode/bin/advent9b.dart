@@ -105,33 +105,36 @@ class Node {
 ///
 /// Traverse the basic from this node and count the number of nodes.
 ///
-int basin(Node? node, [int current = 0]) {
-  int total =0;
+int basinCount(Node? node, [int current = 0]) {
+
+  int total = current;
 
   if (node != null && node.value != 9) {
     print("value: ${node.value}");
 
-    total += current;
-    node.visited = true;
+    if (!node.visited) {
+      total++;
+      node.visited = true;
+    }
 
     Node? leftNode = node.leftNode;
     if (leftNode != null && !leftNode.visited) {
-      total += basin(node.leftNode, total);
+      total += basinCount(node.leftNode);
     }
 
     Node? rightNode = node.rightNode;
     if (rightNode != null && !rightNode.visited) {
-      total += basin(node.rightNode, total);
+      total += basinCount(node.rightNode);
     }
 
     Node? upNode = node.upNode;
     if (upNode != null && !upNode.visited) {
-      total += basin(node.upNode, total);
+      total += basinCount(node.upNode);
     }
 
     Node? downNode = node.downNode;
     if (downNode != null && !downNode.visited) {
-      total += basin(node.downNode, total);
+      total += basinCount(node.downNode);
     }
   }
   return total;
@@ -143,15 +146,25 @@ int basin(Node? node, [int current = 0]) {
   main(List<String> arguments) {
     // Load data.
     List<Node> nodes = loadInput(INPUT_FILE);
+    List<int> counts = List<int>.empty(growable: true);
 
-    int total = 0;
+    // Generate all the counts from the data.
     for (Node node in nodes) {
       if (node.isLowest()) {
-        int basinSize = basin(node);
+        int basinSize = basinCount(node);
         print("Size: $basinSize");
-        total *= basinSize;
+        counts.add(basinSize);
       }
     }
 
-    print("Total: $total");
+    counts.sort((b, a) => a.compareTo(b));
+
+    int total = 1;
+    if (counts.length >=3) {
+      for (int index = 0; index < 3; index++) {
+        print("count: ${counts[index]}");
+        total *= counts[index];
+      }
+    }
+    print("total: $total");
   }

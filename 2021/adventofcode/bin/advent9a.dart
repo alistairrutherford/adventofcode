@@ -110,7 +110,7 @@ class Node {
     int total = 0;
     for (Node node in nodes) {
       if (node.isLowest()) {
-        total += total + 1;
+        total += node.value + 1;
       }
     }
 
