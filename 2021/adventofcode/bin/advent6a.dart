@@ -1,5 +1,5 @@
 /**
- * AdventOfCode 5
+ * AdventOfCode 6
  */
 
 import 'dart:collection';
