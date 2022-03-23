@@ -41,13 +41,13 @@ List<Node> loadInput(String fileName) {
       if (col > 0) {
         currentNode.leftNode = nodes[current - 1];
       }
-      if (col < gridX) {
+      if (col < gridX - 1) {
         currentNode.rightNode = nodes[current + 1];
       }
       if (row > 0) {
         currentNode.upNode = nodes[current - gridX];
       }
-      if (row < rows) {
+      if (row < rows - 1) {
         currentNode.downNode = nodes[current + gridX];
       }
     }
@@ -109,8 +109,10 @@ class Node {
 
     int total = 0;
     for (Node node in nodes) {
-
+      if (node.isLowest()) {
+        total += total + 1;
+      }
     }
 
-    print("Data: $total");
+    print("Total: $total");
   }
