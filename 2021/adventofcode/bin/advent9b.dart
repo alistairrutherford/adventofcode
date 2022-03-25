@@ -146,8 +146,8 @@ int basinCount(Node? node, [int current = 0]) {
   main(List<String> arguments) {
     // Load data.
     List<Node> nodes = loadInput(INPUT_FILE);
-    List<int> counts = List<int>.empty(growable: true);
 
+    List<int> counts = List<int>.empty(growable: true);
     // Find lowest starting points and recurse structure.
     for (Node node in nodes) {
       if (node.isLowest()) {
