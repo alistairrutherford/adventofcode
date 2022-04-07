@@ -28,6 +28,8 @@ List<String> loadInput(String fileName) {
 /// Track opening and closing brackets
 ///
 int updateCountMap(String char, Map<String, int> map) {
+  int score = 0;
+
   int scoreBracket1 = map['(']!;
   int scoreBracket2 = map['[']!;
   int scoreBracket3 = map['{']!;
@@ -39,24 +41,36 @@ int updateCountMap(String char, Map<String, int> map) {
       break;
     case ')':
       scoreBracket1--;
+      if (scoreBracket1 < 0) {
+        score += SCORE_MAP[')']!;
+      }
       break;
     case '[':
       scoreBracket2++;
       break;
     case ']':
       scoreBracket2--;
+      if (scoreBracket2 < 0) {
+        score += SCORE_MAP[']']!;
+      }
       break;
     case '{':
       scoreBracket3++;
       break;
     case '}':
       scoreBracket3--;
+      if (scoreBracket3 < 0) {
+        score += SCORE_MAP['}']!;
+      }
       break;
     case '<':
       scoreBracket4++;
       break;
     case '>':
       scoreBracket4--;
+      if (scoreBracket4 < 0) {
+        score += SCORE_MAP['>']!;
+      }
       break;
   }
   map['('] = scoreBracket1;
@@ -64,14 +78,15 @@ int updateCountMap(String char, Map<String, int> map) {
   map['{'] = scoreBracket3;
   map['<'] = scoreBracket4;
 
-  // Return total count
-  int total = 0;
-  for (int count in map.values) {
-    total += count;
-  }
-  return total;
+  return score;
 }
 
+void resetcountMap(Map<String, int> map) {
+  map['('] = 0;
+  map['['] = 0;
+  map['{'] = 0;
+  map['<'] = 0;
+}
 
   /**
    * Main.
@@ -81,27 +96,26 @@ int updateCountMap(String char, Map<String, int> map) {
     List<String> lines = loadInput(INPUT_FILE);
 
     int total = 0;
-
-
+    
     // Initialise map
     Map<String, int> counts =  HashMap<String, int>();
-    counts['('] = 0;
-    counts['['] = 0;
-    counts['{'] = 0;
-    counts['<'] = 0;
 
-    // Rule: If the total map count is > number of remaining charavters in the line then it's incomplete
+    // Rule: If the total map count is > number of remaining characters in the line then it's incomplete
     List<int> scores = List<int>.empty(growable: true);
+
     for (String line in lines) {
+      // Reset counts
+      resetcountMap(counts);
+
       int index = 0;
       bool isCorrupt = false;
       while (index < line.length && !isCorrupt) {
         String char = line[index++];
-        int totalCount = updateCountMap(char, counts);
-        if (totalCount > (line.length - index)) {
-          isCorrupt = true;
-        }
+        int score = updateCountMap(char, counts);
+        isCorrupt = score > 0;
+        total += score;
       }
     }
+
     print("total: $total");
   }
