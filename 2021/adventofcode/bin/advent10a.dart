@@ -11,7 +11,7 @@ const String INPUT_FILE = "advent10.txt";
 final SCORE_MAP = const {')': 3, ']': 57, '}': 1197, '>': 25137};
 
 /**
- * Load input and build data stricture
+ * Load input.
  *
  */
 List<String> loadInput(String fileName) {
@@ -99,9 +99,6 @@ void resetcountMap(Map<String, int> map) {
     
     // Initialise map
     Map<String, int> counts =  HashMap<String, int>();
-
-    // Rule: If the total map count is > number of remaining characters in the line then it's incomplete
-    List<int> scores = List<int>.empty(growable: true);
 
     for (String line in lines) {
       // Reset counts
