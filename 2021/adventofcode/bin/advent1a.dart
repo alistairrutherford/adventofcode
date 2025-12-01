@@ -1,5 +1,5 @@
 /**
-* AdventOfCode 1
+* AdventOfCode 1.0
 */
 
 import 'dart:io';
